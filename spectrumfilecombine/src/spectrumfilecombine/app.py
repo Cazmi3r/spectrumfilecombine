@@ -5,7 +5,7 @@ combines the txt files provided by spectrum for Hyla boxes
 import toga
 from toga.style import Pack
 from toga.style.pack import COLUMN, ROW
-from .combine import FileBuffer
+from .combine import SpectrumCombiner
 
 
 class SpectrumFileCombine(toga.App):
@@ -60,13 +60,10 @@ class SpectrumFileCombine(toga.App):
         """combines all files into one file"""
         job_number = self.job_number_input.value
         date = self.date_input.value
-        job_number = "57202"
-        date = "0531H"
-        testBuffer = FileBuffer(job_number, date)
-        output = testBuffer.get_buffer_size()
+        combiner = SpectrumCombiner(job_number, date)
         self.main_window.info_dialog(
             "Processing status",
-            str(output)
+            "Jobs Done!"
         )
 
 

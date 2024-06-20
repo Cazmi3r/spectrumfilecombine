@@ -1,4 +1,5 @@
 from pathlib import Path
+import pandas as pd
 
 def build_path_to_data(job_number, date_mmddx):
     """builds the path to the data from the job num and date"""
@@ -12,8 +13,8 @@ def generate_header():
 class FileBuffer():
     """Buffer for managing files"""
     def __init__(self, job_number, date_mmddx) -> None:
-        path_to_data = build_path_to_data(job_number, date_mmddx)
-        self.buffer = list(path_to_data.glob('*.txt'))
+        self.path_to_data = build_path_to_data(job_number, date_mmddx)
+        self.buffer = list(self.path_to_data.glob('*.txt'))
         if not self.validate_buffer():
             raise RuntimeError("Data isn't Valid")
     def validate_buffer(self):
@@ -41,6 +42,24 @@ class SpectrumCombiner():
     """Combines all text files into one file"""
     def __init__(self, job_number, date_mmddx) -> None:
         self.buffer = FileBuffer(job_number, date_mmddx)
-    def process_files(self, buffer):
-        """combines all files into one file adding original file name to end"""
-        pass
+        self.path_to_data = self.buffer.path_to_data
+        self.df_to_combine = []
+        self.process_files()
+    def process_files(self):
+        """combines all files into one file"""  
+        # add all files to be combined into a single list
+        while not self.buffer.is_buffer_empty():
+            file_to_add = self.buffer.pop_file()
+            self.df_add_file(file_to_add)
+        # Combine data and output file
+        output_df = pd.concat(self.df_to_combine)
+        output_df.to_csv(
+            self.path_to_data / "SpectrumData.txt",
+            index=None,
+            sep="|"
+        )
+    def df_add_file(self, file):
+        """adds a file to output df and appends file name to df"""
+        to_add_df = pd.read_csv(file,sep='|')
+        to_add_df['filename'] = file.stem
+        self.df_to_combine.append(to_add_df)
