@@ -1,4 +1,4 @@
-from pathlib import Path
+from pathlib import Path 
 import pandas as pd
 
 def build_path_to_data(job_number, date_mmddx):
@@ -21,7 +21,7 @@ class FileBuffer():
         """validates each file is the proper format"""
         header = generate_header()
         for file in self.buffer:
-            with open(file) as f:
+            with open(file, encoding="utf-8") as f:
                 first_line = f.readline().strip('\n')
                 if first_line != header:
                     return False
