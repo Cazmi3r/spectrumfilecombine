@@ -4,26 +4,22 @@ combines the txt files provided by spectrum for Hyla boxes
 
 import toga
 from toga.style import Pack
-from toga.style.pack import COLUMN, ROW
+from toga.style.pack import ROW
 from .combine import SpectrumCombiner
 
 
 class SpectrumFileCombine(toga.App):
+    """UI for Spectrum Combiner"""
     def startup(self):
-        """Construct and show the Toga application.
 
-        Usually, you would add your application to a main content box.
-        We then create a main window (with a name matching the app), and
-        show the main window.
-        """
         main_box = toga.Box()
 
-        # job number 
+        # job number
         job_number_label = toga.Label(
             "Job Number: ",
             style=Pack(padding=(0, 5))
         )
-        self.job_number_input = toga.TextInput(style=Pack(flex=1))
+        self.job_number_input = toga.TextInput(style=Pack(flex=1)) # pylint: disable=W0201
         job_number_box = toga.Box(style=Pack(direction=ROW, padding=5))
         job_number_box.add(job_number_label)
         job_number_box.add(self.job_number_input)
@@ -33,7 +29,7 @@ class SpectrumFileCombine(toga.App):
             "Date (mmddx): ",
             style=Pack(padding=(0,5))
         )
-        self.date_input = toga.TextInput(style=Pack(flex=1))
+        self.date_input = toga.TextInput(style=Pack(flex=1)) # pylint: disable=W0201
         date_box = toga.Box(style=Pack(direction=ROW, padding=5))
         date_box.add(date_label)
         date_box.add(self.date_input)
@@ -56,11 +52,11 @@ class SpectrumFileCombine(toga.App):
         self.main_window.content = main_box
         self.main_window.show()
 
-    def process_files(self, widget):
+    def process_files(self, widget): # pylint: disable=W0613
         """combines all files into one file"""
         job_number = self.job_number_input.value
         date = self.date_input.value
-        combiner = SpectrumCombiner(job_number, date)
+        combiner = SpectrumCombiner(job_number, date) #pylint: disable=W0612
         self.main_window.info_dialog(
             "Processing status",
             "Jobs Done!"
@@ -68,4 +64,5 @@ class SpectrumFileCombine(toga.App):
 
 
 def main():
+    """Runs the Application"""
     return SpectrumFileCombine()
